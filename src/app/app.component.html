@@ -19,7 +19,7 @@
 	<input type="text" placeholder="Barcode" [(ngModel)]="itemBarcode" pattern="[0-9]">
 	<input type="text" placeholder="Item Name" [(ngModel)]="itemName" pattern="[A-Za-z]">
 	<input type="text" placeholder="Item Price" [(ngModel)]="itemPrice" pattern="[0-9]"><br>
-	<button id="submitBtn" (click)="addItem">Add Item</button><br>
+	<button (click)="addItem()">Add Item</button><br>
 </fieldset>
 
 <br>
@@ -34,6 +34,13 @@
 		<th>Item Price</th>
 		<th>Ctl</th>
 	</tr>
+
+	<tr *ngFor="let item of itemsList">
+		<td>{{item.barcode}}</td>
+		<td>{{item.name}}</td>
+		<td>{{item.price}}</td>
+		<td>X</td>
+	</tr>
 </table>
 
-<p id="itemsMap"></p>
+<!-- <p id="itemsMap"></p> -->
