@@ -1,5 +1,17 @@
 import { Component } from '@angular/core';
-import { Item } from './item';
+
+export class Item {
+  barcode: string = "";
+  name: string = "";
+  price: number = 0;
+}
+
+export class Receipt {
+  receiptNumber: string = ''
+  totalAmount: number = 0.00
+  purchaseDate: string = ''
+  items: Item[] = []
+}
 
 @Component({
   selector: 'app-root',
@@ -8,8 +20,10 @@ import { Item } from './item';
 export class AppComponent {
   title = 'groceries-assistance';
 
+  url = 'http://localhost:3000/receipts'
+
   receiptNumber = ''
-  totalAmount = 0.00
+  totalAmount: number = 0.00
   purchaseDate = ''
 
   itemBarcode = ''
@@ -18,68 +32,54 @@ export class AppComponent {
 
   itemsList = Array<Item>()
 
+  receipt: Receipt = new Receipt()
+
+  updateTotalAmount(): number {
+    let acc: number = 0
+    for (let index = 0; index < this.itemsList.length; index++) {
+      acc += +this.itemsList[index].price;
+    }
+
+    this.totalAmount = +acc
+
+    return this.totalAmount
+  }
+
   addItem() {
-    this.totalAmount += +this.itemPrice
-    
+
     let item = new Item()
 
     item.barcode = this.itemBarcode
     item.name = this.itemName
-    item.price = this.itemPrice
+    item.price = +this.itemPrice
 
     this.itemsList.push(item)
+    this.updateTotalAmount()
+
+    this.itemBarcode = ''
+    this.itemName = ''
+    this.itemPrice = 0.00
 
     console.table(this.itemsList)
   }
 
-  removeItem(barcode: string) {
-    let item = this.itemsList.find(item => item.barcode == barcode)
-    // this.itemsList.pop(item)
+  removeItem(item: Item) {
+    this.itemsList = this.itemsList.filter(elem => elem !== item)
+    this.updateTotalAmount()
   }
 
-  // function removeItem() {
+  getReceipt(): Receipt {
+    this.receipt.receiptNumber = this.receiptNumber
+    this.receipt.totalAmount = this.updateTotalAmount()
+    this.receipt.purchaseDate = this.purchaseDate
+    this.receipt.items = this.itemsList
 
-  // 	// Items display table
-  // 	const itemListTable = document.querySelector('#itemListTable')
+    return this.receipt
+  }
 
-  // 	removeItemBtn.addEventListener('click', () => {
-  // 		const row = removeItemBtn.parentElement.parentElement
-  // 		const itemBarcodeKey = row.firstChild.textContent
-  // 		const removedItemPrice = row.children.item(2).textContent
+  sendReceipt(receipt: Receipt, url: string) {
 
-  // 		console.log(removedItemPrice)
-
-  // 		itemsMap.delete(itemBarcodeKey)
-  // 		itemListTable.removeChild(row)
-
-  // 		totalAmount -= +removedItemPrice
-  // 		console.log(itemsMap)
-  // 	})
-
-  // }
-
-  // const saveBtn = document.querySelector('#saveBtn')
-
-  // saveBtn.addEventListener('click', saveReceipt)
-
-  // function saveReceipt() {
-  // 	const itemsInListForm = []
-
-  // 	for (let item of itemsMap) {
-  // 		itemsInListForm.push(item[1])
-  // 	}
-
-  // 	const receipt = {
-  // 		"receiptAumber": rcNo,
-  // 		"totalAmount": totalAmount,
-  // 		"purchaseDate": purchaseDateTxt.value,
-  // 		"listOfItems": itemsInListForm
-  // 	}
-
-  // 	document.querySelector('#itemsMap').textContent = JSON.stringify(receipt)
-  // 	const ur = 'http://localhost:3000/receipts'
-  // 	sendReceipt(receipt, ur)
-  // }
+  }
 
   // function sendReceipt(receipt, url) {
   // 	fetch(url, {
@@ -89,4 +89,5 @@ export class AppComponent {
   // 	}).catch(err => console.log(err))
   // 	.then(result => console.log(result))
   // }
+  
 }

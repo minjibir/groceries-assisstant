@@ -32,15 +32,13 @@
 		<th>Barcode</th>
 		<th>Item Name</th>
 		<th>Item Price</th>
-		<th>Ctl</th>
+		<th style="color: rgb(134, 18, 18);">Action</th>
 	</tr>
 
 	<tr *ngFor="let item of itemsList">
 		<td>{{item.barcode}}</td>
 		<td>{{item.name}}</td>
 		<td>{{item.price}}</td>
-		<td>X</td>
+		<td><button (click)="removeItem(item)">Remove</button></td>
 	</tr>
 </table>
-
-<!-- <p id="itemsMap"></p> -->
