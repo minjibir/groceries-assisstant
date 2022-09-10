@@ -1,16 +1,16 @@
-<h2>Grocerry Receipt Tracker</h2>
+<h2>Grocery Receipt Tracker</h2>
 
 <fieldset>
 	<legend>RECEIPT INFORMATION</legend>
-	<input type="text" placeholder="Receipt Number" [(ngModel)]="receiptNumber" pattern="[A-Z0-9]">
-	<input type="date" [(ngModel)]="purchaseDate">
+	<input type="text" placeholder="Receipt Number" [(ngModel)]="receipt.id" pattern="[A-Z0-9]">
+	<input type="date" [(ngModel)]="receipt.purchaseDate">
 </fieldset>
 
 <div>
 	<p>
-		Receipt Number: {{receiptNumber}}<br>
-		Total Amount: {{totalAmount}}<br>
-		Purchase Date: {{purchaseDate}}
+		Receipt Number: {{receipt.id}}<br>
+		Total Amount: {{receipt.totalAmount}}<br>
+		Purchase Date: {{receipt.purchaseDate}}
 	</p>
 </div>
 
@@ -23,7 +23,7 @@
 </fieldset>
 
 <br>
-<button id="saveBtn">Save Receipt</button>
+<button id="saveBtn" (click)="sendReceipt()">Save Receipt</button>
 <br>
 <br>
 
@@ -35,7 +35,7 @@
 		<th style="color: rgb(134, 18, 18);">Action</th>
 	</tr>
 
-	<tr *ngFor="let item of itemsList">
+	<tr *ngFor="let item of receipt.items">
 		<td>{{item.barcode}}</td>
 		<td>{{item.name}}</td>
 		<td>{{item.price}}</td>

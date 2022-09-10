@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 
 export class Item {
@@ -7,7 +8,7 @@ export class Item {
 }
 
 export class Receipt {
-  receiptNumber: string = ''
+  id: string = ''
   totalAmount: number = 0.00
   purchaseDate: string = ''
   items: Item[] = []
@@ -20,29 +21,25 @@ export class Receipt {
 export class AppComponent {
   title = 'groceries-assistance';
 
-  url = 'http://localhost:3000/receipts'
-
-  receiptNumber = ''
-  totalAmount: number = 0.00
-  purchaseDate = ''
+  url = 'http://localhost:3000/receipt'
 
   itemBarcode = ''
   itemName = ''
   itemPrice = 0.00
 
-  itemsList = Array<Item>()
+  constructor(private httpClient: HttpClient) {}
 
   receipt: Receipt = new Receipt()
 
   updateTotalAmount(): number {
     let acc: number = 0
-    for (let index = 0; index < this.itemsList.length; index++) {
-      acc += +this.itemsList[index].price;
+    for (let index = 0; index < this.receipt.items.length; index++) {
+      acc += +this.receipt.items[index].price;
     }
 
-    this.totalAmount = +acc
+    this.receipt.totalAmount = +acc
 
-    return this.totalAmount
+    return this.receipt.totalAmount
   }
 
   addItem() {
@@ -53,41 +50,27 @@ export class AppComponent {
     item.name = this.itemName
     item.price = +this.itemPrice
 
-    this.itemsList.push(item)
+    this.receipt.items.push(item)
     this.updateTotalAmount()
 
     this.itemBarcode = ''
     this.itemName = ''
     this.itemPrice = 0.00
 
-    console.table(this.itemsList)
+    console.table(this.receipt.items)
   }
 
   removeItem(item: Item) {
-    this.itemsList = this.itemsList.filter(elem => elem !== item)
+    this.receipt.items = this.receipt.items.filter(elem => elem !== item)
     this.updateTotalAmount()
   }
 
-  getReceipt(): Receipt {
-    this.receipt.receiptNumber = this.receiptNumber
-    this.receipt.totalAmount = this.updateTotalAmount()
-    this.receipt.purchaseDate = this.purchaseDate
-    this.receipt.items = this.itemsList
+  sendReceipt() {
+    console.log(this.receipt)
 
-    return this.receipt
+    this.httpClient
+      .post(this.url, this.receipt)
+      .subscribe(res => console.log(res), err => console.error(err))
   }
 
-  sendReceipt(receipt: Receipt, url: string) {
-
-  }
-
-  // function sendReceipt(receipt, url) {
-  // 	fetch(url, {
-  // 		method: 'POST',
-  // 		headers: {'Content-Type': 'application/json'},
-  // 		body: receipt,
-  // 	}).catch(err => console.log(err))
-  // 	.then(result => console.log(result))
-  // }
-  
 }
