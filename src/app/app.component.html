@@ -2,13 +2,13 @@
 
 <fieldset>
 	<legend>RECEIPT INFORMATION</legend>
-	<input type="text" placeholder="Receipt Number" [(ngModel)]="receipt.id" pattern="[A-Z0-9]">
+	<input type="text" placeholder="Receipt Number" [(ngModel)]="receipt.receiptNumber" pattern="[A-Z0-9]">
 	<input type="date" [(ngModel)]="receipt.purchaseDate">
 </fieldset>
 
 <div>
 	<p>
-		Receipt Number: {{receipt.id}}<br>
+		Receipt Number: {{receipt.receiptNumber}}<br>
 		Total Amount: {{receipt.totalAmount}}<br>
 		Purchase Date: {{receipt.purchaseDate}}
 	</p>
@@ -16,9 +16,9 @@
 
 <fieldset>
 	<legend>ADD ITEM</legend>
-	<input type="text" placeholder="Barcode" [(ngModel)]="itemBarcode" pattern="[0-9]">
-	<input type="text" placeholder="Item Name" [(ngModel)]="itemName" pattern="[A-Za-z]">
-	<input type="text" placeholder="Item Price" [(ngModel)]="itemPrice" pattern="[0-9]"><br>
+	<input type="text" placeholder="Barcode" [(ngModel)]="barcode" pattern="[0-9]">
+	<input type="text" placeholder="Item Name" [(ngModel)]="name" pattern="[A-Za-z]">
+	<input type="text" placeholder="Item Price" [(ngModel)]="price" pattern="[0-9]"><br>
 	<button (click)="addItem()">Add Item</button><br>
 </fieldset>
 

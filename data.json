@@ -1,4 +1,47 @@
 {
   "receipt": [
+    {
+      "receiptNumber": "",
+      "totalAmount": 0,
+      "purchaseDate": "",
+      "items": [],
+      "id": 1
+    },
+    {
+      "receiptNumber": "DX2342",
+      "totalAmount": 300,
+      "purchaseDate": "2022-09-10",
+      "items": [
+        {
+          "barcode": "CB",
+          "name": "Item0",
+          "price": 100
+        },
+        {
+          "barcode": "EX323",
+          "name": "Item 2",
+          "price": 200
+        }
+      ],
+      "id": 2
+    },
+    {
+      "receiptNumber": "RC2342",
+      "totalAmount": 300,
+      "purchaseDate": "2022-09-10",
+      "items": [
+        {
+          "barcode": "234",
+          "name": "Item1",
+          "price": "100"
+        },
+        {
+          "barcode": "9797",
+          "name": "Item2",
+          "price": "200"
+        }
+      ],
+      "id": 3
+    }
   ]
 }

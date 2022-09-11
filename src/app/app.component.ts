@@ -11,29 +11,29 @@ export class Receipt {
   id: string = ''
   totalAmount: number = 0.00
   purchaseDate: string = ''
-  items: Item[] = []
+  items: Array<Item> = []
 }
 
-@Component({
+@Component( {
   selector: 'app-root',
   templateUrl: './app.component.html'
-})
+} )
 export class AppComponent {
   title = 'groceries-assistance';
 
   url = 'http://localhost:3000/receipt'
 
-  itemBarcode = ''
-  itemName = ''
-  itemPrice = 0.00
-
-  constructor(private httpClient: HttpClient) {}
-
   receipt: Receipt = new Receipt()
+
+  barcode: string = ""
+  name: string = ""
+  price: number = 0.00
+
+  constructor( private httpClient: HttpClient ) { }
 
   updateTotalAmount(): number {
     let acc: number = 0
-    for (let index = 0; index < this.receipt.items.length; index++) {
+    for ( let index = 0; index < this.receipt.items.length; index++ ) {
       acc += +this.receipt.items[index].price;
     }
 
@@ -43,34 +43,29 @@ export class AppComponent {
   }
 
   addItem() {
+    const newItem = new Item()
 
-    let item = new Item()
+    newItem.barcode = this.barcode
+    newItem.name = this.name
+    newItem.price = this.price
 
-    item.barcode = this.itemBarcode
-    item.name = this.itemName
-    item.price = +this.itemPrice
-
-    this.receipt.items.push(item)
+    this.receipt.items.push( newItem )
     this.updateTotalAmount()
 
-    this.itemBarcode = ''
-    this.itemName = ''
-    this.itemPrice = 0.00
-
-    console.table(this.receipt.items)
+    this.barcode = ""
+    this.name = ""
+    this.price = 0.00
   }
 
-  removeItem(item: Item) {
-    this.receipt.items = this.receipt.items.filter(elem => elem !== item)
+  removeItem( item: Item ) {
+    this.receipt.items = this.receipt.items.filter( elem => elem !== item )
     this.updateTotalAmount()
   }
 
   sendReceipt() {
-    console.log(this.receipt)
-
     this.httpClient
-      .post(this.url, this.receipt)
-      .subscribe(res => console.log(res), err => console.error(err))
+      .post( this.url, this.receipt )
+      .subscribe( result => console.log( result ), error => console.error( error ) );
   }
 
 }
