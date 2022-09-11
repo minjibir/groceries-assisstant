@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 
 export class Item {
@@ -10,84 +11,61 @@ export class Receipt {
   receiptNumber: string = ''
   totalAmount: number = 0.00
   purchaseDate: string = ''
-  items: Item[] = []
+  items: Array<Item> = []
 }
 
-@Component({
+@Component( {
   selector: 'app-root',
   templateUrl: './app.component.html'
-})
+} )
 export class AppComponent {
   title = 'groceries-assistance';
 
-  url = 'http://localhost:3000/receipts'
-
-  receiptNumber = ''
-  totalAmount: number = 0.00
-  purchaseDate = ''
-
-  itemBarcode = ''
-  itemName = ''
-  itemPrice = 0.00
-
-  itemsList = Array<Item>()
+  url = 'http://localhost:3000/receipt'
 
   receipt: Receipt = new Receipt()
 
+  barcode: string = ""
+  name: string = ""
+  price: number = 0.00
+
+  constructor( private httpClient: HttpClient ) { }
+
   updateTotalAmount(): number {
     let acc: number = 0
-    for (let index = 0; index < this.itemsList.length; index++) {
-      acc += +this.itemsList[index].price;
+    for ( let index = 0; index < this.receipt.items.length; index++ ) {
+      acc += +this.receipt.items[index].price;
     }
 
-    this.totalAmount = +acc
+    this.receipt.totalAmount = +acc
 
-    return this.totalAmount
+    return this.receipt.totalAmount
   }
 
   addItem() {
+    const newItem = new Item()
 
-    let item = new Item()
+    newItem.barcode = this.barcode
+    newItem.name = this.name
+    newItem.price = this.price
 
-    item.barcode = this.itemBarcode
-    item.name = this.itemName
-    item.price = +this.itemPrice
-
-    this.itemsList.push(item)
+    this.receipt.items.push( newItem )
     this.updateTotalAmount()
 
-    this.itemBarcode = ''
-    this.itemName = ''
-    this.itemPrice = 0.00
-
-    console.table(this.itemsList)
+    this.barcode = ""
+    this.name = ""
+    this.price = 0.00
   }
 
-  removeItem(item: Item) {
-    this.itemsList = this.itemsList.filter(elem => elem !== item)
+  removeItem( item: Item ) {
+    this.receipt.items = this.receipt.items.filter( elem => elem !== item )
     this.updateTotalAmount()
   }
 
-  getReceipt(): Receipt {
-    this.receipt.receiptNumber = this.receiptNumber
-    this.receipt.totalAmount = this.updateTotalAmount()
-    this.receipt.purchaseDate = this.purchaseDate
-    this.receipt.items = this.itemsList
-
-    return this.receipt
+  sendReceipt() {
+    this.httpClient
+      .post( this.url, this.receipt )
+      .subscribe( result => console.log( result ), error => console.error( error ) );
   }
 
-  sendReceipt(receipt: Receipt, url: string) {
-
-  }
-
-  // function sendReceipt(receipt, url) {
-  // 	fetch(url, {
-  // 		method: 'POST',
-  // 		headers: {'Content-Type': 'application/json'},
-  // 		body: receipt,
-  // 	}).catch(err => console.log(err))
-  // 	.then(result => console.log(result))
-  // }
-  
 }
