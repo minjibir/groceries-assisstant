@@ -25,9 +25,11 @@ export class AppComponent {
 
   receipt: Receipt = new Receipt()
 
-  barcode: string = ""
-  name: string = ""
+  barcode: string = ''
+  name: string = ''
   price: number = 0.00
+
+  itemBtnTxt = 'Add Item';
 
   constructor( private httpClient: HttpClient ) { }
 
@@ -37,12 +39,21 @@ export class AppComponent {
       acc += +this.receipt.items[index].price;
     }
 
+    this.receipt.items
+      .map( item => item.price )
+      .reduce( ( x, y ) => x + y )
+
     this.receipt.totalAmount = +acc
 
     return this.receipt.totalAmount
   }
 
   addItem() {
+
+    if(this.itemBtnTxt === 'Update Item') {
+      this.itemBtnTxt = 'Add Item';
+    }
+
     const newItem = new Item()
 
     newItem.barcode = this.barcode
@@ -52,14 +63,26 @@ export class AppComponent {
     this.receipt.items.push( newItem )
     this.updateTotalAmount()
 
-    this.barcode = ""
-    this.name = ""
+    this.barcode = ''
+    this.name = ''
     this.price = 0.00
   }
 
   removeItem( item: Item ) {
     this.receipt.items = this.receipt.items.filter( elem => elem !== item )
     this.updateTotalAmount()
+  }
+
+  updateItem( item: Item ) {
+    this.barcode = item.barcode;
+    this.name = item.name;
+    this.price = item.price;
+
+    if(this.itemBtnTxt === 'Add Item') {
+      this.itemBtnTxt = 'Update Item';
+    }
+
+    this.removeItem(item);
   }
 
   sendReceipt() {
